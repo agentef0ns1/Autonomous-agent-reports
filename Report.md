@@ -4,6 +4,32 @@
 
 [![Autonomous - Vulnerability Assesment ](https://img.youtube.com/vi/ID_DEL_VIDEO/0.jpg)](https://www.youtube.com/watch?v=bEM2UU-0e5Q)
 
+## Definition
+
+It is a set of 4 autonomous AI agents:
+- All connect to a local LLM.
+
+### Main function: 
+```text
+Vulnerability analysis and detection of known exploits for services exposed on a known target.
+```
+### The target:
+
+will be the following docker deployed locally
+```
+vulhub/weblogic:10.3.6.0-2017 "startWebLogic.sh" .... cve-2017-10271-weblogic-1
+
+https://github.com/vulhub/vulhub/blob/master/weblogic/CVE-2017-10271/README.md
+```
+
+### Architecture:
+
+  - Orchestrator agent: connected to a neo4j database, where the state flow is defined, connected to a locally deployed LLM with ollama phi4-mini:latest, its function will be to manage the main process flow by invoking based on the state it is in and the decision it makes based on its possible paths, invoking each of the agents that will perform specialized functions.
+  - Enumerator agent: its function is, given an asset, host, or network, to enumerate it with nmap, obtaining its open ports and the version of its services. Connected to a locally deployed LLM with ollama: etgohome/hackidle-nist-coder:v1.1, for decision-making.
+  - Analyzer agent: based on the results obtained, it will collect the output from the enumerator agent and search for vulnerabilities for that service with searchsploit.
+  - Report agent: responsible for obtaining data from previous processes and generating an executive report on the ports and possible vulnerabilities detected. Connected to a locally deployed LLM with ollama: etgohome/hackidle-nist-coder:v1.1, for decision-making.
+
+
 # === REPORT AGENT SUMMARY ===
 
 - **IP:** 127.0.0.1
